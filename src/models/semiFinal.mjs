@@ -2,26 +2,26 @@ import mongoose from 'mongoose';
 
 const SemiFinalSchema = mongoose.Schema(
   {
-    teams: [
-      {
-        winnerNumber: {
-          type: Number,
-          required: true,
-        },
-        team: {
-          type: String,
-          required: true,
-        },
-        goalsFor: {
-          type: Number,
-          required: true,
-        },
-        goalsAgainst: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
+    winnerNumber: {
+      type: Number,
+      required: true,
+    },
+    team: {
+      type: String,
+      required: true,
+    },
+    goalsFor: {
+      type: Number,
+      required: true,
+    },
+    goalsAgainst: {
+      type: Number,
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRoute from './routes/userRoute.mjs';
+import groupStageRoute from './routes/groupStageRoute.mjs';
 
 const app = express();
 dotenv.config();
@@ -36,3 +37,4 @@ app.listen(PORT, () => {
 
 //Telling the app to use the route
 app.use('/api/v1', userRoute);
+app.use('/api/v1', groupStageRoute);

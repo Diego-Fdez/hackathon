@@ -1,16 +1,12 @@
 import mongoose from 'mongoose';
 
-const GroupStageSchema = mongoose.Schema(
+const VotesSchema = mongoose.Schema(
   {
-    numberGroup: {
-      type: String,
-      required: true,
-    },
     team: {
       type: String,
       required: true,
     },
-    goalsFor: {
+    goalsOf: {
       type: Number,
       required: true,
     },
@@ -18,13 +14,16 @@ const GroupStageSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    userId: {
+    country: {
       type: String,
       required: true,
+    },
+    champion: {
+      type: Boolean,
     },
   },
   { timestamps: true }
 );
 
-const GroupStageModel = mongoose.model('GroupStage', GroupStageSchema);
-export default GroupStageModel;
+const VotesModel = mongoose.model('Votes', VotesSchema);
+export default VotesModel;
