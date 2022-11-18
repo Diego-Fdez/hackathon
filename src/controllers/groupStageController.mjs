@@ -1,10 +1,18 @@
-import GroupStageModel from '../models/groupStageModel.mjs';
+import axios from 'axios';
+import VotesModel from '../models/votesModel.mjs';
 
-export const createGroupStage = async (req, res) => {
-  const groupStage = new GroupStageModel(req.body);
+export const getTeams = async (req, res) => {
   try {
-    await groupStage.save();
-    res.status(201).send({ status: 'OK', message: 'Vote saved successfully' });
+    const { data } = await axios.get(
+      `https://api.football-data.org/v4/competitions/2000/teams`,
+      {
+        headers: {
+          'X-Auth-Token': 'ca8697fbbd93497bad15bdbe63dafd29',
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    );
+    res.json(data);
   } catch (error) {
     res
       .status(error?.status || 500)
@@ -12,25 +20,66 @@ export const createGroupStage = async (req, res) => {
   }
 };
 
-export const getGroupStage = async (req, res) => {
-  const { numberGroup } = req.body;
+export const getTeamMatches = async (req, res) => {
+  const { teamId } = req.params;
+
   try {
-    const groupStage = await GroupStageModel.find({ numberGroup });
-    let teams = {};
-    groupStage.map((group) => {
-      const teamName = group.team;
-      if (!teams[teamName]) teams[teamName] = [];
-      teams[teamName].push({
-        goalsFor: group.goalsFor,
-        goalsAgainst: group.goalsAgainst,
-      });
-    });
-    console.log(
-      [teams].map((team) => {
-        return team.goalsFor;
-      })
+    const { data } = await axios.get(
+      `https://api.football-data.org/v4/teams/${teamId}/matches/`,
+      {
+        headers: {
+          'X-Auth-Token': 'ca8697fbbd93497bad15bdbe63dafd29',
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
     );
-    res.status(200).send({ status: 'OK', data: teams });
+    res.json(data);
+  } catch (error) {
+    res
+      .status(error?.status || 500)
+      .send({ status: 'FAILED', data: { error: error?.message || error } });
+  }
+};
+
+export const getCompetitionMatches = async (req, res) => {
+  const { competitionId } = req.body;
+  try {
+    const { data } = await axios.get(
+      `https://api.football-data.org/v4/competitions/${competitionId}/matches`,
+      {
+        headers: {
+          'X-Auth-Token': 'ca8697fbbd93497bad15bdbe63dafd29',
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    );
+    res.send(data);
+  } catch (error) {
+    res
+      .status(error?.status || 500)
+      .send({ status: 'FAILED', data: { error: error?.message || error } });
+  }
+};
+
+export const registerVote = async (req, res) => {
+  const newVote = new VotesModel(req.body);
+
+  try {
+    await newVote.save();
+    res
+      .status(201)
+      .send({ status: 'OK', message: 'Vote register successfully!' });
+  } catch (error) {
+    res
+      .status(error?.status || 500)
+      .send({ status: 'FAILED', data: { error: error?.message || error } });
+  }
+};
+
+export const getVotes = async (req, res) => {
+  try {
+    const votes = await VotesModel.find();
+    res.json(votes);
   } catch (error) {
     res
       .status(error?.status || 500)

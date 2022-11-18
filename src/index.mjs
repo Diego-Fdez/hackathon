@@ -2,7 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import userRoute from './routes/userRoute.mjs';
+import cors from 'cors';
 import groupStageRoute from './routes/groupStageRoute.mjs';
 
 const app = express();
@@ -30,11 +30,27 @@ DbConnect();
 app.use(morgan('dev'));
 app.use(express.json());
 
+//cors configuration
+const whitelist = [process.env.FRONTEND_URL];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.includes(origin)) {
+      //Puede consultar la API
+      callback(null, true);
+    } else {
+      //No esta Permitido
+      callback(new Error('Error de Cors'));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
+
 //Listening to the port and logging the message.
 app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
 });
 
 //Telling the app to use the route
-app.use('/api/v1', userRoute);
 app.use('/api/v1', groupStageRoute);

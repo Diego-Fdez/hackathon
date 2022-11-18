@@ -1,12 +1,18 @@
 import express from 'express';
 import {
-  createGroupStage,
-  getGroupStage,
+  getTeams,
+  getTeamMatches,
+  getCompetitionMatches,
+  registerVote,
+  getVotes,
 } from '../controllers/groupStageController.mjs';
 
 const router = express.Router();
 
-router.post('/create', createGroupStage);
-router.get('/groupStage', getGroupStage);
+router.get('/get-teams', getTeams);
+router.get('/teams-matches/:teamId', getTeamMatches);
+router.get('/competition-matches', getCompetitionMatches);
+router.post('/vote', registerVote);
+router.get('/votes', getVotes);
 
 export default router;
